@@ -1,0 +1,41 @@
+versi 0.0.1
+basic user session
+--------------------------
+login
+setting
+logout
+
+versi 0.0.2
+authority
+--------------------------
+ada beberapa job title antara lain :
+ - 255 : admin
+ - 1 : karyawan
+ - 2 : project manager
+ - 3 : hr manager
+ - 4 : sales manager
+ - 5 : sales officer
+ 
+versi 0.1
+MODUL UTAMA
+---------------------------
+--Admin : I Putu Yoga
+--Project : I Putu Yoga
+---buat project baru
+---edit project baru
+---asign team
+
+--Task : I Putu Yoga
+---buat task
+---edit task
+---hapus task
+
+--HR : Eka Ariansyah
+---rekrut karyawan
+---daftar payroll
+
+--Sales : Dimas
+---buat order
+---edit order
+
+--Pelanggan : Eka Ariansyah
