@@ -12,9 +12,7 @@
 	<div id="content">
 		<div class="header">
 			<h2><?php echo $judul; ?></h2>
-			<ul class="menu_horizontal" style="margin-left: 50px;">
-				<li><a href="default.asp">baru</a></li>
-			</ul>
+			<?php if(isset($topbar)) echo $topbar; ?>
 			<small><?php if(isset($pesan)) echo $pesan; ?></small>
 		</div>
 		<div>
