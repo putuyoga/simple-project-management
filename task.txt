@@ -15,7 +15,7 @@ ada beberapa job title antara lain :
  - 3 : hr manager
  - 4 : sales manager
  - 5 : sales officer
- 
+ saya ganteng lho
 versi 0.1
 MODUL UTAMA
 ---------------------------
