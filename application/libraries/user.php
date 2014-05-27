@@ -17,14 +17,6 @@ class User
 	-----------------------------------------**/
 	public function get_current_user()
 	{
-		if($this->current_user != NULL)
-		{
-			if($this->current_user['auth'] != 255)
-			{
-				$this->clear_current_user();
-			}
-		}
-		
 		return $this->current_user;
 	}
 	
