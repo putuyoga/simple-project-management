@@ -6,7 +6,7 @@
 <?php endif; ?>
 </div>
 	<ul>
-		<li class="job_title">SALES OFFICER</li>
+		<li class="job_title"><?php echo get_job_title($user['auth']); ?></li>
 		<li style="font-weight: bold;"><?php echo $user['username']; ?></li>
 		<li><a href="<?php echo base_url(); ?>index.php/main/edit_profil">setting</a></li>
 		<li><a href="<?php echo base_url(); ?>index.php/main/logout">logout</a></li>
