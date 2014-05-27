@@ -118,8 +118,6 @@ class Users_model extends CI_Model {
 		}
 	}
 	
-	
-	
 	public function total_row()
 	{
 		$query = $this->db->get($this->get_table());
