@@ -30,7 +30,7 @@ MODUL UTAMA
 ---edit task
 ---hapus task
 
---HR : Dimas
+--HR : Dimas atmojo
 ---rekrut karyawan
 ---daftar payroll
 
