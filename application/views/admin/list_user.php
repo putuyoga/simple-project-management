@@ -10,6 +10,8 @@
 		<th>
 			Auth
 		</th>
+		<th>
+		</th>
 	</tr>
 	<?php foreach($list as $item) : ?>
 		<tr>
@@ -25,6 +27,9 @@
 				<?php 
 					echo get_job_title($item['auth']);
 				?>
+			</td>
+			<td>
+				<a href="<?php echo base_url('index.php/admin/hapus_user/' . $item['id']); ?>">hapus</a>
 			</td>
 		</tr>
 	<?php endforeach; ?>
