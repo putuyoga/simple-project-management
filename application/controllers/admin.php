@@ -86,7 +86,7 @@ class Admin extends CI_Controller {
 			$this->form_validation->set_rules('username', 'Username', 'required|alpha');
 			$this->form_validation->set_rules('password', 'Password', 'matches[repassword]');
 			$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
-			$this->form_validation->set_rules('auth', 'Auth', 'less_than[3]');
+			//$this->form_validation->set_rules('auth', 'Auth', 'less_than[3]');
 			
 			$showForm = true;
 			

@@ -144,8 +144,7 @@ class Users_model extends CI_Model {
 		$data = array(
 			'username' => $data_user['username'],
 			'email' => $data_user['email'],
-			'auth' => $data_user['auth'],
-			'jadwal' => $data_user['jadwal']
+			'auth' => $data_user['auth']
 		);
 		if(!empty(trim($data_user['password'])))
 		{

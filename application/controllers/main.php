@@ -34,7 +34,8 @@ class Main extends CI_Controller {
 			if($cek_login !== FALSE)
 			{
 				$this->user->set_current_user($cek_login);
-				redirect('main/');					
+				redirect('main');					
+				
 			}
 		}
 		$data['judul'] = "Login";
