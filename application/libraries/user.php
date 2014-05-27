@@ -87,4 +87,24 @@ class User
 		
 	}
 	
+	/**---------------------------------------
+		dapatkan view sidebar
+	-----------------------------------------**/
+	public function get_sidebar($data)
+	{
+		$sidebar = $this->CI->load->view('menu/top', $data, true);
+		if($data['user']['auth'] < 255)
+		{
+			$sidebar .= $this->CI->load->view('menu/' . $data['user']['auth'], '',true);
+		}
+		else
+		{
+			$sidebar .= $this->CI->load->view('menu/255', '',true);
+			$sidebar .= $this->CI->load->view('menu/2', '',true);
+			$sidebar .= $this->CI->load->view('menu/3', '',true);
+			$sidebar .= $this->CI->load->view('menu/4', '',true);
+		}
+		return $sidebar;
+	}
+	
 }
