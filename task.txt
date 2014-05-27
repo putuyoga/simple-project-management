@@ -15,7 +15,7 @@ ada beberapa job title antara lain :
  - 3 : hr manager
  - 4 : sales manager
  - 5 : sales officer
- 
+
 versi 0.1
 MODUL UTAMA
 ---------------------------
@@ -30,12 +30,11 @@ MODUL UTAMA
 ---edit task
 ---hapus task
 
---HR : Eka Ariansyah
+--HR : Dimas
 ---rekrut karyawan
 ---daftar payroll
 
---Sales : Dimas
+--Sales : Eka
 ---buat order
 ---edit order
-
---Pelanggan : Eka Ariansyah
+--Pelanggan
