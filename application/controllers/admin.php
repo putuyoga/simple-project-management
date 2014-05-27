@@ -2,21 +2,6 @@
 
 class Admin extends CI_Controller {
 
-	/**
-	 * Index Page for this controller.
-	 *
-	 * Maps to the following URL
-	 * 		http://example.com/index.php/welcome
-	 *	- or -  
-	 * 		http://example.com/index.php/welcome/index
-	 *	- or -
-	 * Since this controller is set as the default controller in 
-	 * config/routes.php, it's displayed at http://example.com/
-	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<method_name>
-	 * @see http://codeigniter.com/user_guide/general/urls.html
-	 */
 	public function __construct()
 	{
 		parent::__construct();
@@ -46,8 +31,7 @@ class Admin extends CI_Controller {
 		else
 		{
 			$data['user'] = $this->user->get_current_user();
-			$data['sidebar'] = $this->load->view('menu/top', $data, true);
-			$data['sidebar'] .= $this->load->view('menu/' . $data['user']['auth'], '',true);
+			$data['sidebar'] = $this->user->get_sidebar($data);
 			
 			$data['judul'] = "Admin Panel";
 			$this->load->view('header', $data);
@@ -59,9 +43,8 @@ class Admin extends CI_Controller {
 	public function users()
 	{
 		$data['user'] = $this->user->get_current_user();
-		$data['sidebar'] = $this->load->view('menu/top', $data, true);
-		$data['sidebar'] .= $this->load->view('menu/' . $data['user']['auth'], '',true);
-			
+		$data['sidebar'] = $this->user->get_sidebar($data);
+		$data['topbar'] = $this->load->view('menu/admin/user', '', true);
 		
 		$dataTS['list'] = $this->users_model->get_all();
 		$data['judul'] = "List User";
@@ -80,10 +63,10 @@ class Admin extends CI_Controller {
 		if ($this->form_validation->run() == FALSE)
 		{
 			$data['user'] = $this->user->get_current_user();
-			$data['menu'] = $this->load->view('menu', $data, TRUE);
+			$data['sidebar'] = $this->user->get_sidebar($data);
 			$data['judul'] = "Tambah User";
 			$this->load->view('header', $data);
-			$data['list_auth'] = array('1' => 'kantor', '2' => 'remote', '255' => 'admin');
+			$data['list_auth'] = get_list_job_title();
 			$this->load->view('admin/user_baru', $data);
 			$this->load->view('footer');
 		}
@@ -137,8 +120,7 @@ class Admin extends CI_Controller {
 			if($showForm)
 			{
 				$data['user'] = $this->user->get_current_user();
-				$data['sidebar'] = $this->load->view('menu/top', $data, true);
-				$data['sidebar'] .= $this->load->view('menu/' . $data['user']['auth'], '',true);
+				$data['sidebar'] = $this->user->get_sidebar($data);
 			
 				//pesan tersimpan notif
 				$pesan = $this->session->flashdata('pesan');
@@ -165,105 +147,6 @@ class Admin extends CI_Controller {
 		} else { die("user not found"); }
 	}
 	
-	public function timesheet($type_filter = '', $value = '')
-	{
-		//init
-		$date = date('Y-m-d', time());
-		$month = date('F', time());
-		$year = date('Y', time());
-		
-		if($type_filter == 'date')
-		{
-			$date = $value;
-		}
-		elseif($type_filter == 'month')
-		{
-			$month = $value;
-		}
-		elseif($type_filter == 'year')
-		{
-			$year = $value;
-		}
-		
-		$this->load->model('timesheet_model');
-		$data['user'] = $this->user->get_current_user();
-		$data['menu'] = $this->load->view('menu', $data, TRUE);
-		
-		$dataTS['list'] = $this->timesheet_model->get_all_nice_ringkas($type_filter, $value);
-		$data['judul'] = "List Timesheet";
-		$data['select_date'] = $date;
-		$data['select_month'] = $month;
-		$data['select_year'] = $year;
-		$data['select_filter'] = $type_filter;
-		$this->load->view('header', $data);
-		$this->load->view('admin/list_timesheet', $dataTS);
-		$this->load->view('footer');
-		/*
-		$this->load->model('timesheet_model');
-		$data['user'] = $this->user->get_current_user();
-		$data['menu'] = $this->load->view('menu', $data, TRUE);
-		
-		$dataTS['list'] = $this->timesheet_model->get_all_nice();
-		$dataTS['is_ringkas'] = false;
-		$data['judul'] = "List Timesheet";
-		$this->load->view('header', $data);
-		$this->load->view('admin/list_timesheet', $dataTS);
-		$this->load->view('footer');
-		*/
-	}
-	
-	public function list_ts($id_user)
-	{
-		$this->load->model('timesheet_model');
-		$data['user'] = $this->user->get_current_user();
-		$data['menu'] = $this->load->view('menu', $data, TRUE);
-		
-		$dataTS['list'] = $this->timesheet_model->get_by_user($id_user);
-		if($dataTS['list'] == NULL) return;
-		$user = $this->users_model->get_by_id($id_user);
-		
-		$data['judul'] = "List Timesheet : " . $user['username'];
-		$this->load->view('header', $data);
-		$this->load->view('admin/list_user_timesheet', $dataTS);
-		$this->load->view('footer');
-	}
-	
-	public function edit_ts($id)
-	{
-		$this->load->model('timesheet_model');
-		if($this->input->post('do-save') !== FALSE)
-		{
-			$this->timesheet_model->edit($this->input->post());
-			$data['pesan'] = 'tersimpan';
-		}
-		
-		//menu
-		$data['user'] = $this->user->get_current_user();
-		$data['menu'] = $this->load->view('menu', $data, TRUE);
-		
-		$data['judul'] = "Edit Timesheet";
-		$this->load->view('header', $data);
-		
-		//load timesheet yg dimaksud
-		$this->load->helper('form');
-		$data = $this->timesheet_model->get_by_id($id);
-		$data['list_user'] = $this->users_model->get_all_simple();
-		$this->load->view('admin/edit_timesheet', $data);
-		$this->load->view('footer');
-	}
-	
-	public function hapus_td($id)
-	{
-		$this->load->model('timesheet_model');
-		$ts = $this->timesheet_model->get_by_id($id);
-		
-		if($ts !== NULL)
-		{
-			$this->timesheet_model->del_by_id($id);
-			redirect('admin/timesheet');
-		}
-	}
-	
 	public function hapus_user($id)
 	{
 		$user = $this->users_model->get_by_id($id);
@@ -280,111 +163,6 @@ class Admin extends CI_Controller {
 			}
 		}
 	}
-	
-	public function poin($type_filter = '', $value = '')
-	{
-		//init
-		$date = date('Y-m-d', time());
-		$month = date('F', time());
-		$year = date('Y', time());
-		
-		if($type_filter == 'date')
-		{
-			$date = $value;
-		}
-		elseif($type_filter == 'month')
-		{
-			$month = $value;
-		}
-		elseif($type_filter == 'year')
-		{
-			$year = $value;
-		}
-		$data['user'] = $this->user->get_current_user();
-		$data['menu'] = $this->load->view('menu', $data, TRUE);
-
-		$dataTS['list'] = $this->users_model->get_all_with_poin($type_filter, $value);
-		$data['judul'] = "Poin " . $value;
-		$data['select_date'] = $date;
-		$data['select_month'] = $month;
-		$data['select_year'] = $year;
-		$data['select_filter'] = $type_filter;
-		$this->load->view('header', $data);
-		$this->load->view('admin/list_poin', $dataTS);
-		$this->load->view('footer');
-	}
-	
-	public function beri_poin($id_user)
-	{
-		if($this->input->post('do-give') !== FALSE)
-		{
-			$this->load->model('poin_model');
-			$data = $this->input->post();
-			$this->poin_model->add($id_user, 1, $data['poin']);
-			redirect('admin/poin/');
-		}
-		$data['user'] = $this->user->get_current_user();
-		$data['menu'] = $this->load->view('menu', $data, TRUE);
-		$dataTS = $this->users_model->get_by_id_with_poin($id_user);
-		$data['judul'] = "Beri poin";
-		$this->load->view('header', $data);
-		$this->load->view('admin/beri_poin', $dataTS);
-		$this->load->view('footer');
-	}
-	
-	public function stop_ts($id_user = '')
-	{
-		$user = $this->users_model->get_by_id($id_user);
-		if($user !== FALSE)
-		{
-			$this->load->model('timesheet_model');
-			$this->timesheet_model->stop($user['id']);
-			redirect('admin/timesheet');
-		}
-	}
-	
-	public function delete()
-	{
-		
-	}
-	
-	/*
-	public function stop_ts($id_ts = '', $id_user = '')
-	{
-		$this->load->model('timesheet_model');
-		$this->load->model('poinrules_model');
-		$this->load->model('poin_model');
-		if(empty(trim($id_user)))
-		{
-			$ts = $this->timesheet_model->get_by_id($id_ts);
-			$id_user = $ts['id_user'];
-		}
-		$user = $this->users_model->get_by_id($id_user);
-		
-		if($user !== FALSE)
-		{
-			$this->timesheet_model->stop($user['id']);
-			
-			//load rules
-			$rules = $this->poinrules_model->get_all();
-			
-			//check total work time
-			if($this->timesheet_model->is_enough_work($user['id'], $user['auth'], $rules))
-			{
-				$poin = $this->timesheet_model->get_poin_sukses($user['id'], $user['auth'], $rules);
-				$this->poin_model->add($user['id'], 2, $poin);
-			}
-			//jika waktu habis
-			elseif($this->poinrules_model->is_end_worktime($user['auth']))
-			{
-				$poin = $this->timesheet_model->get_poin_gagal($user['id'], $user['auth'], $rules);
-				$this->poin_model->add($user['id'], 2, $poin);
-			}
-		
-		}
-		redirect('admin/timesheet');
-	}*/
-
 }
 
 /* End of file welcome.php */
