@@ -26,6 +26,18 @@ class sales_model extends CI_Model{
 		$this->db->delete('pelanggan');
 	}
 	
+	public function insert_pelanggan(array $data_pelanggan)
+	{
+		
+		$data = array(
+			'nama' => $data_pelanggan['nama'],
+			'email' => $data_pelanggan['email'],
+			'no_telp' => $data_pelanggan['no_telp'],
+			'website' => $data_pelanggan['website'],
+			'alamat' => $data_pelanggan['alamat'],
+		);
+		$this->db->insert('pelanggan', $data);
+	}
 }
 
 ?>
