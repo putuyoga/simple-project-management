@@ -1,3 +1,4 @@
+
 <p class="desc">Disini anda dapat melihat daftar project di sistem ini</p>
 <table>
 	<tr>
@@ -12,6 +13,9 @@
 		</th>
 		<th>
 			Selesai
+		</th>
+		<th>
+			Task
 		</th>
 		<th>
 		</th>
@@ -33,8 +37,10 @@
 				<?php echo date('d M Y',strtotime($item['tanggal_selesai'])); ?>
 			</td>
 			<td>
-				<a href="<?php echo base_url('index.php/projects/task/' . $item['id']); ?>">task</a>
-				&middot;
+				<a href="<?php echo base_url('index.php/projects/task/' . $item['id']); ?>"><?php echo $item['task_count']; ?></a>
+				
+			</td>
+			<td>
 				<a href="<?php echo base_url('index.php/projects/edit/' . $item['id']); ?>">edit</a>
 				&middot;
 				<a href="<?php echo base_url('index.php/projects/hapus/' . $item['id']); ?>">hapus</a>
