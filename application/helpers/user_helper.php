@@ -16,7 +16,10 @@ if( ! function_exists('get_job_title'))
 		}
 		return $title;
 	}
-	
+}
+
+if( ! function_exists('get_list_job_title'))
+{	
 	function get_list_job_title()
 	{
 		return array(
