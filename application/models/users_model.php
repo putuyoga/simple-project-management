@@ -166,6 +166,24 @@ class Users_model extends CI_Model {
 		}
 	}
 	
+	public function get_by_id_array_simple(array $data)
+	{
+		$users = $this->get_by_id_array($data);
+		if($users !== NULL)
+		{
+			$baru = array();
+			foreach($users as $user)
+			{
+				$baru[$user['id']] = $user['username'];
+			}
+			return $baru;
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+	
 	public function total_row()
 	{
 		$query = $this->db->get($this->get_table());
