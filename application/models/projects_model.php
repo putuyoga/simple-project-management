@@ -101,9 +101,9 @@ class Projects_model extends CI_Model {
 	
 	public function get_all_detail()
 	{
-		$select = 'id, id_order, (SELECT username FROM users WHERE id = project_manager) as pm,' .
-		' nama, tanggal_mulai, tanggal_selesai, anggota_tim';
-		$this->db->select($select);
+		$subquery = '(SELECT username FROM users WHERE id = project_manager) as pm';
+		$subquery2 = '(SELECT COUNT(*) FROM task WHERE id_project = project.id) as task_count';
+		$this->db->select("id, id_order, $subquery, $subquery2, nama, tanggal_mulai, tanggal_selesai, anggota_tim");
 		$this->db->order_by('id DESC');
 		$query = $this->db->get($this->get_table());
 		if($query->num_rows() > 0)
