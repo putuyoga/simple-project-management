@@ -136,13 +136,16 @@ class Projects extends CI_Controller {
 		$project = $this->projects_model->get_by_id($id_project);
 		if($project !== NULL)
 		{
+			$this->load->model('tasks_model');
 			$data['user'] = $this->user->get_current_user();
 			$data['sidebar'] = $this->user->get_sidebar($data);
 			$data['id'] = $id_project;
 			$data['topbar'] = $this->load->view('menu/project_task', $data, true);
+			$data['list'] = $this->tasks_model->get_all_by_id_project_detail($id_project);
 			
 			$data['judul'] = 'List Task : ' . $project['nama'];
 			$this->load->view('header', $data);
+			$this->load->view('projects/task_list', $data);
 			$this->load->view('footer');
 		}
 		else
