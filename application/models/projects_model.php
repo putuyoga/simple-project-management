@@ -116,6 +116,23 @@ class Projects_model extends CI_Model {
 		}
 	}
 	
+	public function get_all_pm_detail($id_pm)
+	{
+		$subquery = '(SELECT COUNT(*) FROM task WHERE id_project = project.id) as task_count';
+		$this->db->select("id, id_order, $subquery, nama, tanggal_mulai, tanggal_selesai, anggota_tim");
+		$this->db->where('project_manager', $id_pm);
+		$this->db->order_by('id DESC');
+		$query = $this->db->get($this->get_table());
+		if($query->num_rows() > 0)
+		{
+			return $query->result_array();
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+	
 	public function get_all_simple()
 	{
 		$users = $this->get_all();
