@@ -30,7 +30,7 @@ MODUL UTAMA
 ---edit task
 ---hapus task
 
---HR : Dimas
+--HR : Dimas atmojo
 ---rekrut karyawan
 ---daftar payroll
 
@@ -39,11 +39,4 @@ MODUL UTAMA
 ---edit order
 --Pelanggan
 ---ini branchku yoga
-tes tes bero
 
-
-
-master
-file lengkap
-
-eksperimen-modul-hr
