@@ -12,11 +12,24 @@ class Projects extends CI_Controller {
 	{
 		$data['user'] = $this->user->get_current_user();
 		$data['sidebar'] = $this->user->get_sidebar($data);
+		
 		$data['topbar'] = $this->load->view('menu/projects', '', true);
-		$data['list'] = $this->projects_model->get_all_detail();
+		
 		$data['judul'] = 'List Project';
 		$this->load->view('header', $data);
-		$this->load->view('projects/list', $data);
+		
+		//set content view
+		if($data['user']['auth'] == 255)
+		{
+			$data['list'] = $this->projects_model->get_all_detail();
+			$this->load->view('projects/list', $data);
+		}
+		elseif($data['user']['auth'] == 2)
+		{
+			
+			$data['list'] = $this->projects_model->get_all_pm_detail($data['user']['id']);
+			$this->load->view('projects/list_pm', $data);
+		}
 		$this->load->view('footer');
 	}
 	
