@@ -13,12 +13,29 @@ class Tasks extends CI_Controller {
 	{
 		$data['user'] = $this->user->get_current_user();
 		$data['sidebar'] = $this->user->get_sidebar($data);
-		$data['topbar'] = $this->load->view('menu/tasks', '', true);
-		$data['list'] = $this->tasks_model->get_all_detail();
-		
 		$data['judul'] = 'List Task';
-		$this->load->view('header', $data);
-		$this->load->view('tasks/list', $data);
+		
+		if($data['user']['auth'] == 255)
+		{
+			$data['list'] = $this->tasks_model->get_all_detail();
+			$data['topbar'] = $this->load->view('menu/tasks', '', true);
+			$this->load->view('header', $data);
+			$this->load->view('tasks/list', $data);
+		}
+		elseif($data['user']['auth'] == 1)
+		{
+			$data['list'] = $this->tasks_model->get_all_by_assigned_detail($data['user']['id']);
+			$this->load->view('header', $data);
+			$this->load->view('tasks/list_as_member', $data);
+		}
+		elseif($data['user']['auth'] == 2)
+		{
+			$data['list'] = $this->tasks_model->get_all_by_pm_detail($data['user']['id']);
+			$data['topbar'] = $this->load->view('menu/tasks', '', true);
+			$this->load->view('header', $data);
+			$this->load->view('tasks/list_as_pm', $data);
+		}
+		
 		$this->load->view('footer');
 	}
 	
@@ -107,65 +124,108 @@ class Tasks extends CI_Controller {
 		$task = $this->tasks_model->get_by_id($id);
 		if($task != NULL)
 		{
-			$data = $task;
-			$this->load->library('form_validation');
-			$this->form_validation->set_rules('nama', 'Nama', 'required');
-			$this->form_validation->set_rules('id_project', 'Project', 'required');
-			$this->form_validation->set_rules('assigned_to', 'Assigned To', 'required');
-			$this->form_validation->set_rules('deadline', 'Deadline', 'required');
+			//ambil data session user
+			$user = $this->user->get_current_user();
 			
-			if ($this->form_validation->run() == FALSE)
+			//load detil project dari database
+			$this->load->model('projects_model');
+			$selected_project = $this->projects_model->get_by_id($task['id_project']);
+			if($user['auth'] == 255 || $user['id'] == $task['assigned_to'] || $selected_project['project_manager'] == $user['id'])
 			{
-				$this->load->model('projects_model');
-				
-				//check perubahan project
-				if($this->input->get('set_project') !== FALSE)
+				$data = $task;
+				if($user['auth'] == 1)
 				{
-					$data['id_project'] = $this->input->get('set_project');
-				}
-				
-				//load detil project dari database
-				$selected_project = $this->projects_model->get_by_id($data['id_project']);
-				if($selected_project !== NULL)
-				{
-					$anggota_tim = explode('-',$selected_project['anggota_tim']);
-					
-					//pastikan anggota tim di project tidak kosong
-					if(count($anggota_tim) > 0)
+					if($this->input->post('progress') !== false)
 					{
-						$data['anggota_tim'] = $this->users_model->get_by_id_array_simple($anggota_tim);
+						$data_post = $this->input->post();
+						$data_post['id'] = $id;
+						$this->tasks_model->edit_as_member($data_post);
+						$this->session->set_flashdata('pesan', 'tersimpan');
+						redirect('tasks/edit/' . $id);					
 					}
 					else
 					{
-						$data['anggota_tim'] = NULL;
+						$data['user'] = $user;
+						$data['sidebar'] = $this->user->get_sidebar($data);
+						$data['judul'] = "Edit Task";
+						
+						//set pesan notifikasi
+						$pesan = $this->session->flashdata('pesan');
+						if($pesan !== FALSE) $data['pesan'] = $pesan;
+						$this->load->view('header', $data);
+						
+						$data['id'] = $id;
+						$this->load->view('tasks/edit_as_member', $data);
+						$this->load->view('footer');
 					}
 				}
-				
-				$data['user'] = $this->user->get_current_user();
-				$data['sidebar'] = $this->user->get_sidebar($data);
-				$data['judul'] = "Edit Task";
-				
-				//set pesan notifikasi
-				$pesan = $this->session->flashdata('pesan');
-				if($pesan !== FALSE) $data['pesan'] = $pesan;
-				$this->load->view('header', $data);
-				
-				//ambil semua project
-				$data['project_list'] = $this->projects_model->get_all_simple($id);
-				
-				//buat prioritas list
-				$data['prioritas_list'] = get_list_prioritas();
-				$data['id'] = $id;
-				$this->load->view('tasks/edit', $data);
-				$this->load->view('footer');
+				elseif($user['auth'] == 2 || $user['auth'] == 255)
+				{
+					$this->load->library('form_validation');
+					$this->form_validation->set_rules('nama', 'Nama', 'required');
+					$this->form_validation->set_rules('id_project', 'Project', 'required');
+					$this->form_validation->set_rules('assigned_to', 'Assigned To', 'required');
+					$this->form_validation->set_rules('deadline', 'Deadline', 'required');
+					
+					if ($this->form_validation->run() == FALSE)
+					{
+						//check perubahan project
+						if($this->input->get('set_project') !== FALSE)
+						{
+							$data['id_project'] = $this->input->get('set_project');
+						}
+						
+						if($selected_project !== NULL)
+						{
+							$anggota_tim = explode('-',$selected_project['anggota_tim']);
+							
+							//pastikan anggota tim di project tidak kosong
+							if(count($anggota_tim) > 0)
+							{
+								$data['anggota_tim'] = $this->users_model->get_by_id_array_simple($anggota_tim);
+							}
+							else
+							{
+								$data['anggota_tim'] = NULL;
+							}
+						}
+						
+						$data['user'] = $this->user->get_current_user();
+						$data['sidebar'] = $this->user->get_sidebar($data);
+						$data['judul'] = "Edit Task";
+						
+						//set pesan notifikasi
+						$pesan = $this->session->flashdata('pesan');
+						if($pesan !== FALSE) $data['pesan'] = $pesan;
+						$this->load->view('header', $data);
+						
+						//ambil semua project
+						$data['project_list'] = $this->projects_model->get_all_simple($id);
+						
+						//buat prioritas list
+						$data['prioritas_list'] = get_list_prioritas();
+						$data['id'] = $id;
+						$this->load->view('tasks/edit', $data);
+						$this->load->view('footer');
+					}
+					else
+					{
+						$data_post = $this->input->post();
+						$data_post['id'] = $id;
+						$this->tasks_model->edit($data_post);
+						$this->session->set_flashdata('pesan', 'tersimpan');
+						redirect('tasks/edit/' . $id);
+					}
+				}
+				else
+				{
+					die("COK");
+
+				}
 			}
 			else
 			{
-				$data_post = $this->input->post();
-				$data_post['id'] = $id;
-				$this->tasks_model->edit($data_post);
-				$this->session->set_flashdata('pesan', 'tersimpan');
-				redirect('tasks/edit/' . $id);
+				die('access denied');
 			}
 		}
 		else
