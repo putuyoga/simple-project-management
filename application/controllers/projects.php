@@ -13,28 +13,36 @@ class Projects extends CI_Controller {
 		$data['user'] = $this->user->get_current_user();
 		$data['sidebar'] = $this->user->get_sidebar($data);
 		
-		$data['topbar'] = $this->load->view('menu/projects', '', true);
-		
 		$data['judul'] = 'List Project';
-		$this->load->view('header', $data);
+		
 		
 		//set content view
 		if($data['user']['auth'] == 255)
 		{
 			$data['list'] = $this->projects_model->get_all_detail();
+			$data['topbar'] = $this->load->view('menu/projects', '', true);
+			$this->load->view('header', $data);
 			$this->load->view('projects/list', $data);
 		}
 		elseif($data['user']['auth'] == 2)
 		{
-			
+			$this->load->view('header', $data);
 			$data['list'] = $this->projects_model->get_all_pm_detail($data['user']['id']);
-			$this->load->view('projects/list_pm', $data);
+			$this->load->view('projects/list_as_pm', $data);
+		}
+		else
+		{
+			$this->load->view('header', $data);
+			$data['list'] = $this->projects_model->get_all_by_member_detail($data['user']['id']);
+			$this->load->view('projects/list_as_member', $data);
 		}
 		$this->load->view('footer');
 	}
 	
 	public function baru()
 	{
+		$data['user'] = $this->user->get_current_user();
+		if($data['user']['auth'] != 255) die("access denied");
 		$this->load->library('form_validation');
 		$this->form_validation->set_rules('tanggal_mulai', 'Tanggal Mulai', 'required');
 		$this->form_validation->set_rules('tanggal_selesai', 'Tanggal Selesai', 'required');
@@ -42,7 +50,6 @@ class Projects extends CI_Controller {
 		if ($this->form_validation->run() == FALSE)
 		{
 			$this->load->model('orders_model');
-			$data['user'] = $this->user->get_current_user();
 			$data['sidebar'] = $this->user->get_sidebar($data);
 			$data['judul'] = "Project Baru";
 			$this->load->view('header', $data);
@@ -75,6 +82,7 @@ class Projects extends CI_Controller {
 			$this->form_validation->set_rules('nama', 'Nama', 'required');
 			$this->form_validation->set_rules('tanggal_mulai', 'Tanggal Mulai', 'required');
 			$this->form_validation->set_rules('tanggal_selesai', 'Tanggal Selesai', 'required');
+			$data['user'] = $this->user->get_current_user();
 			
 			if ($this->form_validation->run() == FALSE)
 			{
@@ -83,7 +91,7 @@ class Projects extends CI_Controller {
 			{
 				$data_post = $this->input->post();
 				$data_post['id'] = $id;
-				$this->projects_model->edit($data_post);
+				$this->projects_model->edit($data_post, $data['user']['auth']);
 				$this->session->set_flashdata('pesan', 'tersimpan');
 				redirect('projects/edit/' . $id);
 			}
@@ -91,7 +99,6 @@ class Projects extends CI_Controller {
 			//pesan tersimpan notif
 			$this->load->model('orders_model');
 			
-			$data['user'] = $this->user->get_current_user();
 			$data['sidebar'] = $this->user->get_sidebar($data);
 			$data['judul'] = "Edit Project";
 			$pesan = $this->session->flashdata('pesan');
@@ -99,15 +106,21 @@ class Projects extends CI_Controller {
 			$this->load->view('header', $data);
 			$data['list_auth'] = get_list_job_title();
 			
-			//ambil semua user dengan auth projet manager
-			$data['pm_list'] = $this->users_model->get_by_auth_simple(2);
-			
 			//ambil semua user dengan auth karyawan
 			$data['em_list'] = $this->users_model->get_by_auth_simple(1);
 			$data['anggota_tim'] = explode('-',$data['anggota_tim']);
 			$data['order_list'] = $this->orders_model->get_all_simple();
-		
-			$this->load->view('projects/edit', $data);
+			
+			if($data['user']['auth'] == 255) //as admin
+			{
+				//ambil semua user dengan auth projet manager
+				$data['pm_list'] = $this->users_model->get_by_auth_simple(2);
+				$this->load->view('projects/edit', $data);
+			}
+			elseif($data['user']['auth'] == 2) //as pm
+			{
+				$this->load->view('projects/edit_as_pm', $data);
+			}
 			$this->load->view('footer');
 		}
 	}
@@ -153,12 +166,26 @@ class Projects extends CI_Controller {
 			$data['user'] = $this->user->get_current_user();
 			$data['sidebar'] = $this->user->get_sidebar($data);
 			$data['id'] = $id_project;
-			$data['topbar'] = $this->load->view('menu/project_task', $data, true);
+			
 			$data['list'] = $this->tasks_model->get_all_by_id_project_detail($id_project);
 			
 			$data['judul'] = 'List Task : ' . $project['nama'];
-			$this->load->view('header', $data);
-			$this->load->view('projects/task_list', $data);
+			if($data['user']['auth'] == 255 || $data['user']['auth'] == 2)
+			{
+				$data['topbar'] = $this->load->view('menu/project_task', $data, true);
+				$this->load->view('header', $data);
+				$this->load->view('projects/task_list_as_pm', $data);	
+			}
+			else
+			{
+				$this->load->view('header', $data);
+				//user id dari member yg sedang view list ini
+				$data['member_id'] = $data['user']['id'];
+				$this->load->view('projects/task_list_as_member', $data);	
+			}
+			
+			
+			
 			$this->load->view('footer');
 		}
 		else
