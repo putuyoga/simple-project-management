@@ -99,6 +99,7 @@ class Projects_model extends CI_Model {
 		}
 	}
 	
+	
 	public function get_all_detail()
 	{
 		$subquery = '(SELECT username FROM users WHERE id = project_manager) as pm';
@@ -126,6 +127,42 @@ class Projects_model extends CI_Model {
 		if($query->num_rows() > 0)
 		{
 			return $query->result_array();
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+	
+	public function get_all_by_member_detail($id_team)
+	{
+		$subquery = '(SELECT username FROM users WHERE id = project_manager) as pm';
+		$subquery2 = '(SELECT COUNT(*) FROM task WHERE id_project = project.id) as task_count';
+		$this->db->select("id, id_order, $subquery, $subquery2, nama, tanggal_mulai, tanggal_selesai, anggota_tim");
+		$this->db->order_by('id DESC');
+		$query = $this->db->get($this->get_table());
+		if($query->num_rows() > 0)
+		{
+			$data_project = array();
+			foreach($query->result_array() as $project)
+			{
+				$anggota_tim_array = explode('-', $project['anggota_tim']);
+				if(count($anggota_tim_array) > 0)
+				{
+					if(in_array($id_team, $anggota_tim_array))
+					{
+						$data_project[] = $project;
+					}
+				}
+			}
+			if(count($project) > 0)
+			{
+				return $data_project;
+			}
+			else
+			{
+				return NULL;
+			}
 		}
 		else
 		{
@@ -170,16 +207,29 @@ class Projects_model extends CI_Model {
 		$this->db->insert($this->get_table(), $data);
 	}
 	
-	public function edit(array $data_baru)
+	public function edit(array $data_baru, $auth)
 	{
-		$data = array(
-			'id_order' => $data_baru['id_order'],
-			'nama' => $data_baru['nama'],
-			'tanggal_mulai' => $data_baru['tanggal_mulai'],
-			'tanggal_selesai' => $data_baru['tanggal_selesai'],
-			'project_manager' => $data_baru['project_manager'],
-			'anggota_tim' => implode('-', $data_baru['anggota_tim'])
-		);
+		if($auth == 255) //as admin
+		{
+			$data = array(
+				'id_order' => $data_baru['id_order'],
+				'nama' => $data_baru['nama'],
+				'tanggal_mulai' => $data_baru['tanggal_mulai'],
+				'tanggal_selesai' => $data_baru['tanggal_selesai'],
+				'project_manager' => $data_baru['project_manager'],
+				'anggota_tim' => implode('-', $data_baru['anggota_tim'])
+			);
+		}
+		elseif($auth == 2) // as pm
+		{
+			$data = array(
+				'id_order' => $data_baru['id_order'],
+				'nama' => $data_baru['nama'],
+				'tanggal_mulai' => $data_baru['tanggal_mulai'],
+				'tanggal_selesai' => $data_baru['tanggal_selesai'],
+				'anggota_tim' => implode('-', $data_baru['anggota_tim'])
+			);
+		}
 		
 		$this->db->where('id', $data_baru['id']);
 		$this->db->update($this->get_table(), $data);
