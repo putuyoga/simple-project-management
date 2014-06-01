@@ -51,6 +51,7 @@ class sales_model extends CI_Model{
 		$this->db->where('id', $id);
 		$this->db->update('pelanggan', $data);
 	}
+
 	
 	public function get_column($column,$table,$where){
 		$query = $this->db->query('select '.$column.' from '.$table.' '.$where);
