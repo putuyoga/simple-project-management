@@ -134,6 +134,7 @@ table td {
 	padding: 5px;
 	text-align: left;
 	font-size: 13px;
+	display: inline-block;
 }
 
 label {
@@ -156,4 +157,79 @@ li.header
 {
 	font-size: 20px;
 	font-weight: lighter;
+}
+
+div.extrabigtext
+{
+	font-size: 35px;
+	margin-bottom: 10px;
+}
+
+div.bigtext
+{
+	font-size: 25px;
+	margin-bottom: 10px;
+}
+
+div.mediumtext
+{
+	font-size: 18px;
+	margin-bottom: 5px;
+}
+
+ul.wraplist {
+	padding: 0px;
+	margin: 0px;
+    list-style-type: none; 
+    list-style-image: none;
+}
+
+.wraplist li {
+    display: inline-block;
+	
+}
+
+.wraplist li a {
+    margin: 0 4px;
+    color:#eee;
+    padding: 10px 20px;
+    background:#3c66ad;
+    font-size:16px;
+    font-weight: bold;
+    
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+/*
+	PROGRESS BAR
+	referensi : http://stackoverflow.com/questions/5865825/progress-bar-layout-using-css-and-html
+*/
+#progress {  
+	border: 1px solid #ececec;
+	position: relative;
+	padding: 1px;
+}
+
+#percent {
+	position: absolute;   
+	left: 50%;
+	color: #cccccc;
+}
+
+#bar {
+	height: 20px;
+}
+
+.flatredbg{
+	background-color: #c0392b;
+}
+
+.flatredyellow{
+	background-color: #f1c40f;
+}
+
+.flatredgreen{
+	background-color: #27ae60;
 }
