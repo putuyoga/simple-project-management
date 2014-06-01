@@ -70,6 +70,21 @@ class Users_model extends CI_Model {
 		}
 	}
 	
+	public function get_by_auth($auth)
+	{
+		$this->db->order_by('id DESC');
+		$this->db->where('auth', $auth);
+		$query = $this->db->get($this->get_table());
+		if($query->num_rows() > 0)
+		{
+			return $query->result_array();
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+	
 	
 	public function get_all_at($page, $banyak)
 	{
@@ -100,12 +115,63 @@ class Users_model extends CI_Model {
 		}
 	}
 	
+	public function get_by_id_array(array $data)
+	{
+		$this->db->order_by('id DESC');
+		$this->db->where_in('id', $data);
+		$query = $this->db->get($this->get_table());
+		if($query->num_rows() > 0)
+		{
+			return $query->result_array();
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+	
 	public function get_all_simple()
 	{
 		$users = $this->get_all();
 		$baru = array();
 		if($users !== NULL)
 		{
+			foreach($users as $user)
+			{
+				$baru[$user['id']] = $user['username'];
+			}
+			return $baru;
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+	
+	public function get_by_auth_simple($auth)
+	{
+		$users = $this->get_by_auth($auth);
+		if($users !== NULL)
+		{
+			$baru = array();
+			foreach($users as $user)
+			{
+				$baru[$user['id']] = $user['username'];
+			}
+			return $baru;
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+	
+	public function get_by_id_array_simple(array $data)
+	{
+		$users = $this->get_by_id_array($data);
+		if($users !== NULL)
+		{
+			$baru = array();
 			foreach($users as $user)
 			{
 				$baru[$user['id']] = $user['username'];
