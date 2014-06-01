@@ -53,7 +53,7 @@ class pelanggan extends CI_Controller {
 	
 	public function edit_pelanggan($id = "")
 	{
-		$user = $this->sales_model->get_by_id($id);
+		$user = $this->sales_model->get_by_id($id,'pelanggan');
 		if($user !== FALSE)
 		{
 			$this->load->library('form_validation');
