@@ -2,22 +2,22 @@
 <table>
 	<tr>
     	<th>
-			ID
-		</th>
-		<th width="1000px">
-			Nama
+			ID Order
 		</th>
 		<th>
-			Email
+			ID Pelanggan
 		</th>
 		<th>
-			No. Telp.
+			Status
+		</th>
+		<th>
+			Harga
 		</th>
         <th>
-			Website
+			Tangal
 		</th>
         <th>
-			Alamat
+			Catatan
 		</th>
 		<th>
 		</th>
@@ -25,27 +25,27 @@
 	<?php foreach($list as $item) : ?>
 		<tr>
         	<td>
+            <a href="<?php echo base_url(); ?>/index.php/order/edit_order/<?php echo $item['id']; ?>">
 				<?php echo $item['id']; ?>
 			</td>
 			<td>
-				<a href="<?php echo base_url(); ?>/index.php/pelanggan/edit_pelanggan/<?php echo $item['id']; ?>">
-					<?php echo $item['nama']; ?>
+					<?php echo $item['id_pelanggan']; ?>
 				</a>
 			</td>
 			<td>
-				<?php echo $item['email']; ?>
+				<?php echo $item['status']; ?>
 			</td>
             <td>
-				<?php echo $item['no_telp']; ?>
+				<?php echo $item['harga']; ?>
 			</td>
             <td>
-				<?php echo $item['website']; ?>
+				<?php echo $item['tanggal']; ?>
 			</td>
             <td>
-				<?php echo $item['alamat']; ?>
+				<?php echo $item['catatan']; ?>
 			</td>
 			<td>
-				<a href="<?php echo base_url('index.php/pelanggan/hapus_pelanggan/' . $item['id']); ?>">hapus</a>
+				<a href="<?php echo base_url('index.php/order/hapus_order/' . $item['id']); ?>">hapus</a>
 			</td>
 		</tr>
 	<?php endforeach; ?>
