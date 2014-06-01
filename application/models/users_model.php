@@ -146,7 +146,8 @@ class Users_model extends CI_Model {
 			'email' => $data_user['email'],
 			'auth' => $data_user['auth']
 		);
-		if(!empty(trim($data_user['password'])))
+		//if(!empty(trim($data_user['password'])))
+		if(!empty($data_user['password']))
 		{
 			$data['password'] = md5($data_user['password']);
 		}
@@ -188,4 +189,90 @@ class Users_model extends CI_Model {
 	{
 		$this->db->empty_table($this->get_table());
 	}
+
+	public function get_karyawan()
+	{
+		$this->db->order_by('id DESC');
+		$this->db->where('auth', '1');
+		$query = $this->db->get($this->get_table());
+		if($query->num_rows() > 0)
+		{
+			return $query->result_array();
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+
+	public function karyawan_baru(array $data_user)
+	{
+		
+		$data = array(
+			'username' => $data_user['username'],
+			'email' => $data_user['email'],
+			'auth' => $data_user['auth'],
+		);
+		if(trim($data_user['password']) != '')
+		{
+			$data['password'] = md5($data_user['password']);
+		}
+		$this->db->insert($this->get_table(), $data);
+	}
+
+	public function get_payroll()
+	{
+		
+		$this->db->order_by('id DESC');
+		$this->db->where('auth', '1');
+		//$this->db->select('*');
+		//$this->db->from('users');
+		$this->db->join('payroll', 'id_user = id');
+		//$query = $this->db->get();
+		$query = $this->db->get($this->get_table());
+		if($query->num_rows() > 0)
+		{
+			return $query->result_array();
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+
+	public function payroll_baru(array $data_user)
+	{
+		
+		$data = array(
+			'username' => $data_user['username'],
+			'email' => $data_user['email'],
+			'auth' => $data_user['auth'],
+		);
+		if(trim($data_user['password']) != '')
+		{
+			$data['password'] = md5($data_user['password']);
+		}
+		$this->db->insert($this->get_table(), $data);
+	}
+
+	public function get_payroll_by_id($id_payroll)
+	{
+		$this->db->where('id_payroll', $id_payroll);
+		$query = $this->db->get($this->get_table(), 1);
+		if($query->num_rows() === 1)
+		{
+			return $query->row_array();
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+
+	public function del_payroll_by_id($id_payroll)
+	{
+		$this->db->where('id_payroll', $id_payroll);
+		$this->db->delete($this->get_table());
+	}
+
 }
