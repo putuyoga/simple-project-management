@@ -2,10 +2,10 @@
 <table>
 	<tr>
     	<th>
-			ID Order
+			Nama
 		</th>
 		<th>
-			ID Pelanggan
+			Pelanggan
 		</th>
 		<th>
 			Status
@@ -14,22 +14,22 @@
 			Harga
 		</th>
         <th>
-			Tangal
+			Tanggal
 		</th>
         <th>
-			Catatan
+			Sales
 		</th>
 		<th>
 		</th>
 	</tr>
 	<?php foreach($list as $item) : ?>
 		<tr>
-        	<td>
-            <a href="<?php echo base_url(); ?>/index.php/order/edit_order/<?php echo $item['id']; ?>">
-				<?php echo $item['id']; ?>
+        	<td><a href="<?php echo base_url('index.php/order/detail_order/' . $item['id']); ?>">
+				<?php echo $item['nama']; ?>
+                </a>
 			</td>
 			<td>
-					<?php echo $item['id_pelanggan']; ?>
+					<?php echo $item['nama_pelanggan']; ?>
 				</a>
 			</td>
 			<td>
@@ -39,12 +39,14 @@
 				<?php echo $item['harga']; ?>
 			</td>
             <td>
-				<?php echo $item['tanggal']; ?>
+	            <?php echo date('d M Y',strtotime($item['tanggal'])); ?>
 			</td>
             <td>
-				<?php echo $item['catatan']; ?>
+				<?php echo $item['sales_person']; ?>
 			</td>
 			<td>
+            	<a href="<?php echo base_url('index.php/order/edit_order/' . $item['id']); ?>">edit</a>
+                &middot;
 				<a href="<?php echo base_url('index.php/order/hapus_order/' . $item['id']); ?>">hapus</a>
 			</td>
 		</tr>
