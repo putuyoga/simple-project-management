@@ -42,12 +42,9 @@ class Payroll extends CI_Controller {
 	public function payroll_baru()
 	{
 		$this->load->library('form_validation');
-		$this->form_validation->set_rules('username', 'Username', 'required');
+		$this->form_validation->set_rules('id_user', 'id_user', 'required');
 		$this->form_validation->set_rules('tanggal', 'Tanggal', 'required');
 		$this->form_validation->set_rules('gaji', 'Gaji', 'required');
-		$this->form_validation->set_rules('bonus', 'Bonus', '');
-		$this->form_validation->set_rules('jumlah', 'Jumlah', 'required');
-		$this->form_validation->set_rules('status', 'Status', '');
 		
 		if ($this->form_validation->run() == FALSE)
 		{
@@ -55,7 +52,6 @@ class Payroll extends CI_Controller {
 			$data['sidebar'] = $this->user->get_sidebar($data);
 			$data['judul'] = "Tambah Daftar Payroll";
 			$this->load->view('header', $data);
-			//$data['list_auth'] = get_list_job_title();
 			$data['list_status'] = get_list_status();
 			
 			//ambil semua user dengan auth karyawan
@@ -66,6 +62,7 @@ class Payroll extends CI_Controller {
 		}
 		else
 		{
+			
 			$this->users_model->payroll_baru($this->input->post());
 			redirect('payroll/index/');
 		}
@@ -77,10 +74,9 @@ class Payroll extends CI_Controller {
 		if($user !== FALSE)
 		{
 			$this->load->library('form_validation');
-			$this->form_validation->set_rules('username', 'Username', 'required|alpha');
-			$this->form_validation->set_rules('password', 'Password', 'matches[repassword]');
-			$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
-			//$this->form_validation->set_rules('auth', 'Auth', 'less_than[3]');
+			$this->form_validation->set_rules('id_user', 'id_user', 'required');
+			$this->form_validation->set_rules('tanggal', 'Tanggal', 'required');
+			$this->form_validation->set_rules('gaji', 'Gaji', 'required');
 			
 			$showForm = true;
 			
@@ -90,24 +86,14 @@ class Payroll extends CI_Controller {
 			}
 			else
 			{
-				if($this->input->post('email') != $user['email'])
-				{
-					$this->form_validation->set_rules('email', 'Email', 'is_unique[users.email]');
-				}
-				
-				if($this->input->post('username') != $user['username'])
-				{
-					$this->form_validation->set_rules('username', 'Username', 'is_unique[users.username]');
-				}
-				
 				if($this->form_validation->run() == FALSE)
 				{
 				}
 				else
 				{
-					$this->users_model->edit($this->input->post());
+					$this->users_model->payroll_edit($id_payroll,$this->input->post());
 					$this->session->set_flashdata('pesan', 'tersimpan');
-					redirect('karyawan/edit_karyawan/' . $id);
+					redirect('payroll/edit_payroll/' . $id_payroll);
 				}
 			}
 			
@@ -121,21 +107,16 @@ class Payroll extends CI_Controller {
 				if($pesan !== FALSE) $data['pesan'] = $pesan;
 				
 				//header
-				$data['judul'] = "Edit Karyawan";
+				$data['judul'] = "Edit Payroll id " . $id_payroll;
 				$this->load->view('header', $data);
 				$data = $user;
 				
-				//setup auth dropdown
-				$data['list_auth'] = get_list_job_title();
-				
-				//exclude admin
-				if($user['auth'] != 255)
-				{
-					$data['list_auth'][255] = 'admin';
-				}
+				//setup dropdown
+				$data['list_status'] = get_list_status();
+				$data['em_list'] = $this->users_model->get_by_auth_simple(1);
 				
 				//show the rest
-				$this->load->view('hr_manager/edit_payroll', $data);
+				$this->load->view('hr_manager/payroll_edit', $data);
 				$this->load->view('footer');
 			}
 		} else { die("user not found"); }

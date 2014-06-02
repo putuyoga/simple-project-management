@@ -310,41 +310,27 @@ class Users_model extends CI_Model {
 
 	public function payroll_baru(array $data_user)
 	{
-		
 		$data = array(
-			'username' => $data_user['username'],
+			'id_user' => $data_user['id_user'],
 			'tanggal' => $data_user['tanggal'],
 			'gaji' => $data_user['gaji'],
 			'bonus' => $data_user['bonus'],
-			'jumlah' => $data_user['jumlah'],
 			'status' => $data_user['status'],
 		);
-
-		$this->db->select('id');
-		$this->db->where('username', $data_user['username']);
-		$this->db->join('payroll', 'payroll.id_user = users.id');
-		$query = $this->db->get($this->get_table());
-		//$data = $query->result_array();
-		//echo $data;
-		//echo($data[0]['id']);
-
-		if($query->num_rows() === 1)
-		{
-			return $data = $query->result_array();
-			$data['id_user'] = $data;//$query->row_array();
-			//log_message('debug', var_export($data));
-		//}
-		//else
-		//{
-		//	return FALSE;
-		//}
-
-		//if(trim($data_user['password']) != '')
-		//{
-		//	$data['password'] = md5($data_user['password']);
-		//}
-		$this->db->insert($this->get_table(), $data);
+		$this->db->insert('payroll', $data);
 	}
+	
+	public function payroll_edit($id,array $data_user)
+	{
+		$data = array(
+			'id_user' => $data_user['id_user'],
+			'tanggal' => $data_user['tanggal'],
+			'gaji' => $data_user['gaji'],
+			'bonus' => $data_user['bonus'],
+			'status' => $data_user['status'],
+		);
+		$this->db->where('id_payroll', $id);
+		$this->db->update('payroll', $data);
 	}
 
 	public function get_payroll_by_id($id_payroll)

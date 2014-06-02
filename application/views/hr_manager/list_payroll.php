@@ -51,7 +51,7 @@
 			</td>
 			<td>
 				<?php 
-					echo $item['jumlah'];
+					echo ($item['bonus'] + $item['gaji']);
 				?>
 			</td>
 			<td>

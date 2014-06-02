@@ -2,8 +2,12 @@
 <form action="<?php echo current_url(); ?>" method="post" name="form-order">
 
 	<label>Pelanggan</label>
-	<?php echo form_dropdown('id_pelanggan', $pelanggan, '', 'id="pelanggan"');
-	echo "<br />";?>
+	<?php  if(count($pelanggan > 0) && $pelanggan != NULL): ?>
+	<?php echo form_dropdown('id_pelanggan', $pelanggan, '', 'id="pelanggan"'); ?>
+	<?php else: ?>
+	<div>Tidak ada pelanggan</div>
+	<?php endif; ?>
+	<br />
     <label>Nama Project</label>
     <input type="text" placeholder="nama" name="nama">
     <label>Status</label>
@@ -11,7 +15,7 @@
     <label>Harga</label>
     <input type="numeric" placeholder="harga(Rp.)" name="harga">
     <label>Tanggal</label>
-    <input type="date" placeholder="tttt-bb-hh" name="tanggal" id="tanggal">
+    <input placeholder="tanggal" name="tanggal" id="tanggal">
     <label>Catatan</label>
     <textarea rows="4" name="catatan"> </textarea>
 	<input type="submit" name="do-create" value="buat" class="button">

@@ -1,13 +1,12 @@
 <?php echo validation_errors(); ?>
 <form action="<?php echo current_url(); ?>" method="post" name="form-login">
 <?php $style = 'style=" width: 100%; margin-bottom: 20px"'; ?>
-		<?php echo form_dropdown('username', $em_list, '', $style); ?>
+		<?php echo form_dropdown('id_user', $em_list, '', $style); ?>
 	<!--<input type="text" placeholder="username" name="username" value="<?php //echo set_value('username'); ?>">-->
 	<input type="text" id='tanggal' placeholder="tanggal" name="tanggal" value="<?php echo set_value('tanggal'); ?>">
 	<input type="text" placeholder="gaji" name="gaji" value="<?php echo set_value('gaji'); ?>">
 	<input type="text" placeholder="bonus" name="bonus" value="<?php echo set_value('bonus'); ?>">
-	<input type="text" placeholder="jumlah" name="jumlah" value="<?php echo set_value('jumlah'); ?>">
-	<?php echo form_dropdown('auth', $list_status, set_value('status'), $style); ?>
+	<?php echo form_dropdown('status', $list_status, set_value('status'), $style); ?>
 	<!--<input type="text" placeholder="status" name="username" value="<?php //echo set_value('username'); ?>"> -->
 	<!--<input type="hidden" value="1" name="auth">-->
 	<input type="submit" name="do-create" value="buat" class="button">
