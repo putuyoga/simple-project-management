@@ -15,9 +15,10 @@
 				<label>assigned to</label>
 				<br/>
 				<?php 
+					
 					if(isset($anggota_tim))
 					{
-						if($anggota_tim !== NULL)
+						if($anggota_tim !== FALSE)
 						{
 							echo form_dropdown('assigned_to', $anggota_tim, $assigned_to, $style . ' class="select2"');
 						}
@@ -31,6 +32,7 @@
 						echo "<div>pilih project dulu</div>";
 					}
 				?>
+				<br/>
 				<label>prioritas</label>
 				<br/>
 				<?php echo form_dropdown('prioritas', $prioritas_list, $prioritas, $style); ?>

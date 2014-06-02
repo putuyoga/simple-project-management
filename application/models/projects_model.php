@@ -104,7 +104,7 @@ class Projects_model extends CI_Model {
 	{
 		$subquery = '(SELECT username FROM users WHERE id = project_manager) as pm';
 		$subquery2 = '(SELECT COUNT(*) FROM task WHERE id_project = project.id) as task_count';
-		$this->db->select("id, id_order, $subquery, $subquery2, nama, tanggal_mulai, tanggal_selesai, anggota_tim");
+		$this->db->select("id, id_order, $subquery, $subquery2, nama, tanggal_mulai, tanggal_selesai, anggota_tim, is_done");
 		$this->db->order_by('id DESC');
 		$query = $this->db->get($this->get_table());
 		if($query->num_rows() > 0)
@@ -117,11 +117,48 @@ class Projects_model extends CI_Model {
 		}
 	}
 	
+	public function get_all_notdone_detail()
+	{
+		$subquery = '(SELECT username FROM users WHERE id = project_manager) as pm';
+		$subquery2 = '(SELECT COUNT(*) FROM task WHERE id_project = project.id) as task_count';
+		$this->db->select("id, id_order, $subquery, $subquery2, nama, tanggal_mulai, tanggal_selesai, anggota_tim, is_done");
+		$this->db->order_by('id DESC');
+		$this->db->where('is_done', 0);
+		$query = $this->db->get($this->get_table());
+		if($query->num_rows() > 0)
+		{
+			return $query->result_array();
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+	
+	
 	public function get_all_pm_detail($id_pm)
 	{
 		$subquery = '(SELECT COUNT(*) FROM task WHERE id_project = project.id) as task_count';
-		$this->db->select("id, id_order, $subquery, nama, tanggal_mulai, tanggal_selesai, anggota_tim");
+		$this->db->select("id, id_order, $subquery, nama, tanggal_mulai, tanggal_selesai, anggota_tim, is_done");
 		$this->db->where('project_manager', $id_pm);
+		$this->db->order_by('id DESC');
+		$query = $this->db->get($this->get_table());
+		if($query->num_rows() > 0)
+		{
+			return $query->result_array();
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+	
+	public function get_all_notdone_pm_detail($id_pm)
+	{
+		$subquery = '(SELECT COUNT(*) FROM task WHERE id_project = project.id) as task_count';
+		$this->db->select("id, id_order, $subquery, nama, tanggal_mulai, tanggal_selesai, anggota_tim, is_done");
+		$this->db->where('project_manager', $id_pm);
+		$this->db->where('is_done', 0);
 		$this->db->order_by('id DESC');
 		$query = $this->db->get($this->get_table());
 		if($query->num_rows() > 0)
@@ -138,8 +175,45 @@ class Projects_model extends CI_Model {
 	{
 		$subquery = '(SELECT username FROM users WHERE id = project_manager) as pm';
 		$subquery2 = '(SELECT COUNT(*) FROM task WHERE id_project = project.id) as task_count';
-		$this->db->select("id, id_order, $subquery, $subquery2, nama, tanggal_mulai, tanggal_selesai, anggota_tim");
+		$this->db->select("id, id_order, $subquery, $subquery2, nama, tanggal_mulai, tanggal_selesai, anggota_tim, is_done");
 		$this->db->order_by('id DESC');
+		$query = $this->db->get($this->get_table());
+		if($query->num_rows() > 0)
+		{
+			$data_project = array();
+			foreach($query->result_array() as $project)
+			{
+				$anggota_tim_array = explode('-', $project['anggota_tim']);
+				if(count($anggota_tim_array) > 0)
+				{
+					if(in_array($id_team, $anggota_tim_array))
+					{
+						$data_project[] = $project;
+					}
+				}
+			}
+			if(count($project) > 0)
+			{
+				return $data_project;
+			}
+			else
+			{
+				return NULL;
+			}
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+	
+	public function get_all_notdone_by_member_detail($id_team)
+	{
+		$subquery = '(SELECT username FROM users WHERE id = project_manager) as pm';
+		$subquery2 = '(SELECT COUNT(*) FROM task WHERE id_project = project.id) as task_count';
+		$this->db->select("id, id_order, $subquery, $subquery2, nama, tanggal_mulai, tanggal_selesai, anggota_tim, is_done");
+		$this->db->order_by('id DESC');
+		$this->db->where('is_done', 0);
 		$query = $this->db->get($this->get_table());
 		if($query->num_rows() > 0)
 		{
@@ -217,7 +291,8 @@ class Projects_model extends CI_Model {
 				'tanggal_mulai' => $data_baru['tanggal_mulai'],
 				'tanggal_selesai' => $data_baru['tanggal_selesai'],
 				'project_manager' => $data_baru['project_manager'],
-				'anggota_tim' => implode('-', $data_baru['anggota_tim'])
+				'anggota_tim' => implode('-', $data_baru['anggota_tim']),
+				'is_done' => $data_baru['is_done']
 			);
 		}
 		elseif($auth == 2) // as pm
@@ -227,7 +302,8 @@ class Projects_model extends CI_Model {
 				'nama' => $data_baru['nama'],
 				'tanggal_mulai' => $data_baru['tanggal_mulai'],
 				'tanggal_selesai' => $data_baru['tanggal_selesai'],
-				'anggota_tim' => implode('-', $data_baru['anggota_tim'])
+				'anggota_tim' => implode('-', $data_baru['anggota_tim']),
+				'is_done' => $data_baru['is_done']
 			);
 		}
 		

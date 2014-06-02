@@ -4,7 +4,7 @@
     	<th>
 			ID
 		</th>
-		<th width="1000px">
+		<th>
 			Nama
 		</th>
 		<th>

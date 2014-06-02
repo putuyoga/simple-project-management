@@ -14,17 +14,16 @@
 			Harga
 		</th>
         <th>
-			Tanggal
-		</th>
-        <th>
-			Sales
+			Tangal
 		</th>
 		<th>
 		</th>
 	</tr>
+    <?php $user = $list[0]['user']; ?>
 	<?php foreach($list as $item) : ?>
 		<tr>
-        	<td><a href="<?php echo base_url('index.php/order/detail_order/' . $item['id']); ?>">
+        	<td>
+            	<a href="<?php echo base_url('index.php/order/detail_order/' . $item['id']); ?>">
 				<?php echo $item['nama']; ?>
                 </a>
 			</td>
@@ -39,15 +38,14 @@
 				<?php echo $item['harga']; ?>
 			</td>
             <td>
-	            <?php echo date('d M Y',strtotime($item['tanggal'])); ?>
-			</td>
-            <td>
-				<?php echo $item['sales_person']; ?>
+				<?php echo date('d M Y',strtotime($item['tanggal'])); ?>
 			</td>
 			<td>
-            	<a href="<?php echo base_url('index.php/order/edit_order/' . $item['id']); ?>">edit</a>
+            <?php if($item['sales_person']==$user): ?>
+				<a href="<?php echo base_url('index.php/order/edit_order/' . $item['id']); ?>">edit</a>
                 &middot;
 				<a href="<?php echo base_url('index.php/order/hapus_order/' . $item['id']); ?>">hapus</a>
+            <?php endif; ?>
 			</td>
 		</tr>
 	<?php endforeach; ?>

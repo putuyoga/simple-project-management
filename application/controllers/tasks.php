@@ -14,24 +14,55 @@ class Tasks extends CI_Controller {
 		$data['user'] = $this->user->get_current_user();
 		$data['sidebar'] = $this->user->get_sidebar($data);
 		$data['judul'] = 'List Task';
-		
+		$data['is_list_all'] = false;
 		if($data['user']['auth'] == 255)
 		{
-			$data['list'] = $this->tasks_model->get_all_detail();
+			$data['list'] = $this->tasks_model->get_all_notdone_detail();
 			$data['topbar'] = $this->load->view('menu/tasks', '', true);
 			$this->load->view('header', $data);
 			$this->load->view('tasks/list', $data);
 		}
 		elseif($data['user']['auth'] == 1)
 		{
+			$data['list'] = $this->tasks_model->get_all_notdone_by_assigned_detail($data['user']['id']);
+			$this->load->view('header', $data);
+			$this->load->view('tasks/list_as_member', $data);
+		}
+		elseif($data['user']['auth'] == 2)
+		{
+			$data['list'] = $this->tasks_model->get_all_notdone_by_pm_detail($data['user']['id']);
+			$data['topbar'] = $this->load->view('menu/tasks', '', true);
+			$this->load->view('header', $data);
+			$this->load->view('tasks/list_as_pm', $data);
+		}
+		
+		$this->load->view('footer');
+	}
+	
+	public function list_all()
+	{
+		$data['user'] = $this->user->get_current_user();
+		$data['sidebar'] = $this->user->get_sidebar($data);
+		$data['judul'] = 'List Task';
+		$data['is_list_all'] = true;
+		if($data['user']['auth'] == 255)
+		{
+			$data['list'] = $this->tasks_model->get_all_detail();
+			$data['topbar'] = $this->load->view('menu/tasks_2', $data, true);
+			$this->load->view('header', $data);
+			$this->load->view('tasks/list', $data);
+		}
+		elseif($data['user']['auth'] == 1)
+		{
 			$data['list'] = $this->tasks_model->get_all_by_assigned_detail($data['user']['id']);
+			$data['topbar'] = $this->load->view('menu/tasks_2', $data, true);
 			$this->load->view('header', $data);
 			$this->load->view('tasks/list_as_member', $data);
 		}
 		elseif($data['user']['auth'] == 2)
 		{
 			$data['list'] = $this->tasks_model->get_all_by_pm_detail($data['user']['id']);
-			$data['topbar'] = $this->load->view('menu/tasks', '', true);
+			$data['topbar'] = $this->load->view('menu/tasks_2', $data, true);
 			$this->load->view('header', $data);
 			$this->load->view('tasks/list_as_pm', $data);
 		}
@@ -129,6 +160,12 @@ class Tasks extends CI_Controller {
 			
 			//load detil project dari database
 			$this->load->model('projects_model');
+			
+			//check perubahan project
+			if($this->input->get('set_project') !== FALSE)
+			{
+				$task['id_project'] = $this->input->get('set_project');
+			}
 			$selected_project = $this->projects_model->get_by_id($task['id_project']);
 			if($user['auth'] == 255 || $user['id'] == $task['assigned_to'] || $selected_project['project_manager'] == $user['id'])
 			{
@@ -169,25 +206,23 @@ class Tasks extends CI_Controller {
 					
 					if ($this->form_validation->run() == FALSE)
 					{
-						//check perubahan project
-						if($this->input->get('set_project') !== FALSE)
-						{
-							$data['id_project'] = $this->input->get('set_project');
-						}
+
 						
 						if($selected_project !== NULL)
 						{
-							$anggota_tim = explode('-',$selected_project['anggota_tim']);
 							
+							$anggota_tim = explode('-',$selected_project['anggota_tim']);
 							//pastikan anggota tim di project tidak kosong
-							if(count($anggota_tim) > 0)
+							if(count($anggota_tim) > 0 && !empty($anggota_tim[0]))
 							{
 								$data['anggota_tim'] = $this->users_model->get_by_id_array_simple($anggota_tim);
 							}
 							else
 							{
-								$data['anggota_tim'] = NULL;
+								$data['anggota_tim'] = FALSE;
+								
 							}
+							
 						}
 						
 						$data['user'] = $this->user->get_current_user();

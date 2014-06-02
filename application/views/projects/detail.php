@@ -8,7 +8,7 @@
 				
 				<label>pelanggan</label>
 				<br/>
-				<div class="mediumtext">asasds</div>
+				<div class="mediumtext"><?php $pelanggan['nama']; ?></div>
 				<label>project manager</label>
 				<br/>
 				<div class="mediumtext"><?php echo $project_manager['username']; ?></div>

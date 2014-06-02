@@ -30,6 +30,10 @@
 	<?php else: ?>
 		<span style="color: red;">tidak ada karyawan</span>
 	<?php endif; ?>
+	
+	<label>Sudah Selesai</label>
+	<br/>
+	<?php echo form_dropdown('is_done', $isdone_choice, $is_done, $style); ?>
 	<input type="submit" name="do-edit" value="simpan" class="button">
 </form>
 <script src="<?php echo base_url('js/select2.min.js'); ?>"></script>
