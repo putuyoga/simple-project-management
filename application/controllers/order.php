@@ -90,7 +90,8 @@ class order extends CI_Controller {
 	
 	public function edit_order($id = "")
 	{
-		$order = $this->sales_model->get_by_id($id,'order');
+		//$order = $this->sales_model->get_by_id($id,'order');
+		$order = $this->sales_model->get_detail_by_id($id,'order');
 		//$order = $this->sales_model->get_edit($id);
 		if($order !== FALSE)
 		{
@@ -138,6 +139,8 @@ class order extends CI_Controller {
 			
 			if($showForm)
 			{
+				$data['list'] = $this->sales_model->get_detail_by_id($id,'order');
+				
 				$data['user'] = $this->user->get_current_user();
 				$data['sidebar'] = $this->user->get_sidebar($data);
 			
@@ -146,7 +149,7 @@ class order extends CI_Controller {
 				if($pesan !== FALSE) $data['pesan'] = $pesan;
 				
 				//header
-				$data['judul'] = "Edit Order: ".$id;
+				$data['judul'] = "Edit Order: ".$data['list']['nama'];
 				$this->load->view('header', $data);
 				$data = $order;
 		

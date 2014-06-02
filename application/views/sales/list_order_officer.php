@@ -7,14 +7,14 @@
 		<th>
 			Pelanggan
 		</th>
+        <th>
+			Sales
+		</th>
 		<th>
 			Status
 		</th>
-		<th>
-			Harga
-		</th>
         <th>
-			Tangal
+			Tanggal
 		</th>
 		<th>
 		</th>
@@ -31,11 +31,11 @@
 					<?php echo $item['nama_pelanggan']; ?>
 				</a>
 			</td>
+            			<td>
+				<?php echo $item['sales_person']; ?>
+			</td>
 			<td>
 				<?php echo $item['status']; ?>
-			</td>
-            <td>
-				<?php echo $item['harga']; ?>
 			</td>
             <td>
 				<?php echo date('d M Y',strtotime($item['tanggal'])); ?>
