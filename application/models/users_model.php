@@ -212,7 +212,8 @@ class Users_model extends CI_Model {
 			'email' => $data_user['email'],
 			'auth' => $data_user['auth']
 		);
-		if(!empty(trim($data_user['password'])))
+		//if(!empty(trim($data_user['password'])))
+		if(!empty($data_user['password']))
 		{
 			$data['password'] = md5($data_user['password']);
 		}
@@ -254,4 +255,139 @@ class Users_model extends CI_Model {
 	{
 		$this->db->empty_table($this->get_table());
 	}
+
+	public function get_karyawan()
+	{
+		$this->db->order_by('id ASC');
+		$this->db->where('auth !=', '255');
+		
+		$query = $this->db->get($this->get_table());
+		if($query->num_rows() > 0)
+		{
+			return $query->result_array();
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+
+	public function karyawan_baru(array $data_user)
+	{
+		
+		$data = array(
+			'username' => $data_user['username'],
+			'email' => $data_user['email'],
+			'auth' => $data_user['auth'],
+		);
+		if(trim($data_user['password']) != '')
+		{
+			$data['password'] = md5($data_user['password']);
+		}
+		$this->db->insert($this->get_table(), $data);
+	}
+
+	public function get_payroll()
+	{
+		
+		$this->db->order_by('id DESC');
+		//$this->db->where('auth', '1');
+		//$this->db->select('*');
+		//$this->db->from('users');
+		$this->db->join('payroll', 'id_user = id');
+		//$query = $this->db->get();
+		$query = $this->db->get($this->get_table());
+
+		if($query->num_rows() > 0)
+		{
+			return $query->result_array();
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+
+	public function payroll_baru(array $data_user)
+	{
+		
+		$data = array(
+			'username' => $data_user['username'],
+			'tanggal' => $data_user['tanggal'],
+			'gaji' => $data_user['gaji'],
+			'bonus' => $data_user['bonus'],
+			'jumlah' => $data_user['jumlah'],
+			'status' => $data_user['status'],
+		);
+
+		$this->db->select('id');
+		$this->db->where('username', $data_user['username']);
+		$this->db->join('payroll', 'payroll.id_user = users.id');
+		$query = $this->db->get($this->get_table());
+		//$data = $query->result_array();
+		//echo $data;
+		//echo($data[0]['id']);
+
+		if($query->num_rows() === 1)
+		{
+			return $data = $query->result_array();
+			$data['id_user'] = $data;//$query->row_array();
+			//log_message('debug', var_export($data));
+		//}
+		//else
+		//{
+		//	return FALSE;
+		//}
+
+		//if(trim($data_user['password']) != '')
+		//{
+		//	$data['password'] = md5($data_user['password']);
+		//}
+		$this->db->insert($this->get_table(), $data);
+	}
+	}
+
+	public function get_payroll_by_id($id_payroll)
+	{
+		
+		$this->db->where('id_payroll', $id_payroll);
+		$query = $this->db->get('payroll');
+		if($query->num_rows() === 1)
+		{
+			return $query->row_array();
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+
+	public function del_payroll_by_id($id_payroll)
+	{
+		$this->db->where('id_payroll', $id_payroll);
+		$this->db->delete('payroll');
+	}
+
+	public function get_member_payroll_detail($username)
+	{
+
+
+		//log_message('debug', var_export($username));
+
+		$this->db->order_by('id DESC');
+		$this->db->where('username', $username);
+		$this->db->join('payroll', 'payroll.id_user = users.id');
+		$query = $this->db->get($this->get_table());
+		log_message('debug', var_export($query));
+		if($query->num_rows() > 0)
+		{
+			return $query->result_array();
+
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+
 }
