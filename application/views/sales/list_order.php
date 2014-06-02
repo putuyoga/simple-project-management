@@ -10,14 +10,11 @@
 		<th>
 			Status
 		</th>
-		<th>
-			Harga
+        <th>
+			Sales
 		</th>
         <th>
 			Tanggal
-		</th>
-        <th>
-			Sales
 		</th>
 		<th>
 		</th>
@@ -29,20 +26,16 @@
                 </a>
 			</td>
 			<td>
-					<?php echo $item['nama_pelanggan']; ?>
-				</a>
+				<?php echo $item['nama_pelanggan']; ?>
 			</td>
 			<td>
 				<?php echo $item['status']; ?>
 			</td>
             <td>
-				<?php echo $item['harga']; ?>
+				<?php echo $item['sales_person']; ?>
 			</td>
             <td>
 	            <?php echo date('d M Y',strtotime($item['tanggal'])); ?>
-			</td>
-            <td>
-				<?php echo $item['sales_person']; ?>
 			</td>
 			<td>
             	<a href="<?php echo base_url('index.php/order/edit_order/' . $item['id']); ?>">edit</a>

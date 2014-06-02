@@ -1,6 +1,27 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class pelanggan extends CI_Controller {
+	public function __construct()
+	{
+		parent::__construct();
+		
+		//kalau belum login, suruh login dulu
+		if($this->user->get_current_user() === NULL)
+		{
+			redirect('main/login');
+		} else {
+			$user = $this->user->get_current_user();
+			if($user['auth'] == 255 || $user['auth'] == 4 || $user['auth'] == 5){
+			}
+			else
+			{
+				die('Anda Tidak Memiliki Hak Akses!');
+			}
+		}
+		
+		$this->load->helper('user_helper');
+	}
+	
 	public function list_pelanggan(){
 		$data['user'] = $this->user->get_current_user();
 		$data['sidebar'] = $this->user->get_sidebar($data);

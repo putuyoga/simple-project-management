@@ -1,7 +1,7 @@
 <?php echo validation_errors(); ?>
 <form action="<?php echo current_url(); ?>" method="post" name="form-order">
 	<label>Pelanggan</label>
-    <div class="mediumtext" style="padding:6px; margin-bottom:10px"><?php echo $id_pelanggan; ?></div>
+    <div class="mediumtext" style="padding:6px; margin-bottom:10px"><?php echo $nama_pelanggan; ?></div>
     <label>Nama Project</label>
     <input type="text" placeholder="nama" name="nama" value="<?php echo $nama; ?>">
     <label>Sales Person</label>
