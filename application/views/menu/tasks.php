@@ -1,4 +1,6 @@
 <ul class="menu_horizontal" style="margin-left: 50px;">
+<?php if($user != 1): ?>
 	<li><a href="<?php echo base_url('index.php/tasks/baru/'); ?>">baru</a></li>
-	<li><a href="<?php echo base_url('index.php/projects/task_done/'); ?>">selesai</a></li>
+<?php endif; ?>
+	<li><a href="<?php echo base_url('index.php/tasks/list_all/'); ?>">list semua</a></li>
 </ul>
