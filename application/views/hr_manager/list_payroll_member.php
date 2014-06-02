@@ -1,4 +1,4 @@
-<p class="desc">Disini anda dapat melihat daftar gaji karyawan di sistem ini</p>
+<p class="desc">Disini anda dapat melihat histori daftar gaji anda</p>
 <table>
 	<tr>
 		<th>
@@ -58,11 +58,6 @@
 				<?php 
 					echo get_status($item['status']);
 				?>
-			</td>
-			<td>
-				<a href="<?php echo base_url('index.php/payroll/edit_payroll/' . $item['id_payroll']); ?>">edit</a>
-				&middot;
-				<a href="<?php echo base_url('index.php/payroll/hapus_payroll/' . $item['id_payroll']); ?>">hapus</a>
 			</td>
 		</tr>
 	<?php endforeach; }?>

@@ -13,7 +13,8 @@
 		<th>
 		</th>
 	</tr>
-	<?php foreach($list as $item) : ?>
+	<?php if (is_array($list)) {
+	foreach($list as $item) : ?>
 		<tr>
 			<td>
 				<a href="<?php echo base_url(); ?>/index.php/karyawan/edit_karyawan/<?php echo $item['id']; ?>">
@@ -32,5 +33,5 @@
 				<a href="<?php echo base_url('index.php/karyawan/hapus_payroll/' . $item['id']); ?>">hapus</a>
 			</td>
 		</tr>
-	<?php endforeach; ?>
+	<?php endforeach; } ?>
 </table>

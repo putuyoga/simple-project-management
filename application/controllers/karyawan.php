@@ -27,7 +27,7 @@ class Karyawan extends CI_Controller {
 			$data['sidebar'] = $this->user->get_sidebar($data);
 			$data['judul'] = "Tambah Karyawan";
 			$this->load->view('header', $data);
-			$data['list_auth'] = get_list_job_title();
+			$data['list_auth'] = get_list_job_title_excpt_admin();
 			$this->load->view('hr_manager/karyawan_baru', $data);
 			$this->load->view('footer');
 		}

@@ -13,12 +13,12 @@ modul project:
 
 modul hr:
 -payroll : 
- -- tambah kolom gaji di tabel user
- -- tambah kolom bonus, status (diambil/belum) di tabel payroll
- -- fungsi hapus
+ -- tambah kolom gaji di tabel user (v)
+ -- tambah kolom bonus (v), status (diambil/belum) di tabel payroll (v)
+ -- fungsi hapus(v)
  -- fungsi edit
- -- pembatasan akses view tiap auth
- -- tambah karyawan -> dropdown kyk admin user kecuali ada adminnnya
+ -- pembatasan akses view tiap auth (v)
+ -- tambah karyawan -> dropdown kyk admin user kecuali ada adminnnya (v)
 
 modul sales
  -order:
