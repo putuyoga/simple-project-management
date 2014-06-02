@@ -3,6 +3,8 @@
 <table>
 	<tr>
 		<th>
+		</th>
+		<th>
 			Nama
 		</th>
 		<th>
@@ -19,6 +21,13 @@
 	</tr>
 	<?php foreach($list as $item) : ?>
 		<tr>
+			<td>
+				<?php if($is_list_all) : ?>
+					<?php if($item['is_done']): ?>
+						<img src="<?php echo base_url('images/done.png'); ?>">
+					<?php endif; ?>	
+				<?php endif; ?>
+			</td>
 			<td>
 				<a href="<?php echo base_url(); ?>/index.php/projects/detail/<?php echo $item['id']; ?>">
 					<?php echo $item['nama']; ?>
