@@ -14,13 +14,44 @@ class Projects extends CI_Controller {
 		$data['sidebar'] = $this->user->get_sidebar($data);
 		
 		$data['judul'] = 'List Project';
+		$data['is_list_all'] = false;
 		
+		//set content view
+		if($data['user']['auth'] == 255)
+		{
+			$data['list'] = $this->projects_model->get_all_notdone_detail();
+			$data['topbar'] = $this->load->view('menu/projects', '', true);
+			$this->load->view('header', $data);
+			$this->load->view('projects/list', $data);
+		}
+		elseif($data['user']['auth'] == 2)
+		{
+			$this->load->view('header', $data);
+			$data['list'] = $this->projects_model->get_all_pm_notdone_detail($data['user']['id']);
+			$this->load->view('projects/list_as_pm', $data);
+		}
+		else
+		{
+			$this->load->view('header', $data);
+			$data['list'] = $this->projects_model->get_all_notdone_by_member_detail($data['user']['id']);
+			$this->load->view('projects/list_as_member', $data);
+		}
+		$this->load->view('footer');
+	}
+	
+	public function list_all()
+	{
+		$data['user'] = $this->user->get_current_user();
+		$data['sidebar'] = $this->user->get_sidebar($data);
+		
+		$data['judul'] = 'List Project';
+		$data['is_list_all'] = true;
 		
 		//set content view
 		if($data['user']['auth'] == 255)
 		{
 			$data['list'] = $this->projects_model->get_all_detail();
-			$data['topbar'] = $this->load->view('menu/projects', '', true);
+			$data['topbar'] = $this->load->view('menu/projects_2', '', true);
 			$this->load->view('header', $data);
 			$this->load->view('projects/list', $data);
 		}
@@ -44,6 +75,9 @@ class Projects extends CI_Controller {
 		$data['user'] = $this->user->get_current_user();
 		if($data['user']['auth'] != 255) die("access denied");
 		$this->load->library('form_validation');
+		$this->form_validation->set_rules('nama', 'Nama', 'required');
+		$this->form_validation->set_rules('id_order', 'Order', 'required');
+		$this->form_validation->set_rules('project_manager', 'Project', 'required');
 		$this->form_validation->set_rules('tanggal_mulai', 'Tanggal Mulai', 'required');
 		$this->form_validation->set_rules('tanggal_selesai', 'Tanggal Selesai', 'required');
 		
@@ -110,6 +144,7 @@ class Projects extends CI_Controller {
 			$data['em_list'] = $this->users_model->get_by_auth_simple(1);
 			$data['anggota_tim'] = explode('-',$data['anggota_tim']);
 			$data['order_list'] = $this->orders_model->get_all_simple();
+			$data['isdone_choice'] = array(false => 'tidak', true => 'iya');
 			
 			if($data['user']['auth'] == 255) //as admin
 			{
@@ -147,7 +182,9 @@ class Projects extends CI_Controller {
 		
 		//ambil data user dari project manager
 		$data['project_manager'] = $this->users_model->get_by_id($data['project_manager']);
+		
 		$data['order'] = $this->orders_model->get_by_id($data['id_order']);
+		$data['pelanggan'] = $this->sales_model->get_by_id($data['order']['id_pelanggan'],'pelanggan');
 		
 		//ambil semua user dengan auth karyawan
 		$array_id = explode('-', $data['anggota_tim']);

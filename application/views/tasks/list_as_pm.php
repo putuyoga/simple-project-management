@@ -27,6 +27,11 @@
 		<tr>
 			<td>
 			<img src="<?php echo base_url('images/' . $item['prioritas'] . '.png'); ?>" title="<?php echo $item['prioritas']; ?>">
+			<?php if($is_list_all): ?>
+				<?php if($item['progress'] == 100): ?>
+					<img src="<?php echo base_url('images/done.png'); ?>">
+				<?php endif; ?>
+			<?php endif; ?>
 			</td>
 			<td style="width:30%;">
 				<a href="<?php echo base_url(); ?>/index.php/tasks/detail/<?php echo $item['id']; ?>">

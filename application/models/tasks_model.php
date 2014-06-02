@@ -135,6 +135,43 @@ class Tasks_model extends CI_Model {
 		}
 	}
 	
+	public function get_all_notdone_detail()
+	{
+		$subquery = '(SELECT username FROM users WHERE id = assigned_to) as assigned_username';
+		$subquery2 = '(SELECT nama FROM project WHERE id = id_project) as nama_project';
+		$this->db->select("id, id_project, $subquery, $subquery2, assigned_to, nama, prioritas, progress, deadline");
+		$this->db->where('progress != 100');
+		$this->db->order_by('id DESC');
+		$query = $this->db->get($this->get_table());
+		if($query->num_rows() > 0)
+		{
+			return $query->result_array();
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+	
+	public function get_all_notdone_by_assigned_detail($id)
+	{
+		$subquery = '(SELECT username FROM users WHERE id = assigned_to) as assigned_username';
+		$subquery2 = '(SELECT nama FROM project WHERE id = id_project) as nama_project';
+		$this->db->select("id, id_project, $subquery, $subquery2, assigned_to, nama, prioritas, progress, deadline");
+		$this->db->where('assigned_to', $id);
+		$this->db->where('progress != 100');
+		$this->db->order_by('id DESC');
+		$query = $this->db->get($this->get_table());
+		if($query->num_rows() > 0)
+		{
+			return $query->result_array();
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+	
 	public function get_all_by_assigned_detail($id)
 	{
 		$subquery = '(SELECT username FROM users WHERE id = assigned_to) as assigned_username';

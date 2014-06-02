@@ -2,5 +2,5 @@
 <?php if($user != 1): ?>
 	<li><a href="<?php echo base_url('index.php/tasks/baru/'); ?>">baru</a></li>
 <?php endif; ?>
-	<li><a href="<?php echo base_url('index.php/tasks/list_all/'); ?>">list semua</a></li>
+	<li><a href="<?php echo base_url('index.php/tasks/'); ?>">list belum selesai</a></li>
 </ul>
